@@ -1,0 +1,14 @@
+.error-indicator {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 26px;
+    color: orange;
+}
+.error-indicator img {
+    margin-bottom: 10px;
+}
+.boom {
+    font-size: 26px;
+    line-height: 26px;
+}
