@@ -1,6 +1,6 @@
 .person-details {
     display: flex;
-    margin-top: 1rem;
+    margin-top: 5px;
     flex-direction: row;
     padding: 1rem;
   }
