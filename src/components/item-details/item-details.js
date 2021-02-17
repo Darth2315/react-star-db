@@ -1,40 +1,39 @@
 import React, { Component } from 'react';
-import SwapiService from '../../services/swapi-service';
 import Spinner from '../spinner';
 import ErrorIndicator from '../error-indicator';
-import './person-details.css';
+import './item-details.css';
 
-export default class PersonDetails extends Component {
+export default class ItemDetails extends Component {
 
   state = {
-    person: null,
+    item: null,
     loading: true,
-    error: false
+    error: false,
+    img: null
   }
 
-  swapiService = new SwapiService();
-
   componentDidMount() {
-    this.updatePerson();
+    this.updateItem();
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.personId !== prevProps.personId) {
-      this.updatePerson();
+    if (this.props.itemId !== prevProps.itemId) {
+      this.updateItem();
     }
   }
   
-  updatePerson() {
-    const { personId } = this.props;
-    if (!personId) {
+  updateItem() {
+    const { itemId, getData, getImageUrl } = this.props;
+    if (!itemId) {
       return;
     }
 
-    this.swapiService.getPerson(personId)
-    .then(person => {
+    getData(itemId)
+    .then(item => {
       this.setState({
-        person,
-        loading: false
+        item,
+        loading: false,
+        img: getImageUrl(item)
       })
     })
     .catch(this.onError)
@@ -49,12 +48,12 @@ export default class PersonDetails extends Component {
 
   render() {
 
-    if (!this.state.person) {
+    if (!this.state.item) {
       return <span>Select a person from a list</span>
     }
 
-    const { person, error, loading } = this.state;
-    const content = !loading && !error ? <PersonView person={person}/> : null;
+    const { item, error, loading, img } = this.state;
+    const content = !loading && !error ? <ItemView item={item} image={img}/> : null;
     const spinner = loading ? <Spinner/> : null;
     const errorPerson = error ? <ErrorIndicator /> : null;
 
@@ -68,14 +67,14 @@ export default class PersonDetails extends Component {
   }
 }
 
-const PersonView = ({person}) => {
+const ItemView = ({item, image}) => {
 
-  const {id, name, gender, birthYear, eyeColor} = person;
+  const {name, gender, birthYear, eyeColor} = item;
 
   return (
     <>
       <img className="person-image"
-        src={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`} alt="star wars person"/>
+        src={image} alt="star wars person"/>
 
       <div className="card-body">
         <h4>{name}</h4>
