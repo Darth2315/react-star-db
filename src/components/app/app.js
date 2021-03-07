@@ -1,31 +1,22 @@
 import React, {Component} from 'react';
-
 import Header from '../header';
 import RandomPlanet from '../random-planet';
 import Button from '../button';
-
-import './app.css';
 import ErrorIndicator from '../error-indicator';
 import SwapiService from '../../services/swapi-service';
+import DummySwapiService from '../../services/dummy-swapi-service';
 import {SwapiServiceProvider} from '../swapi-service-context';
+import {PeoplePage, PlanetPage, StarshipPage} from '../pages';
 
-import {
-  PersonList,
-  StarshipList,
-  PlanetList,
-  PersonDetails,
-  StarshipDetails,
-  PlanetDetails
-} from '../sw-pages';
+import './app.css';
 
 export default class App extends Component {
 
   state = {
     randomPlanet: true,
-    hasError: false
+    hasError: false,
+    swapiService: new SwapiService()
   }
-
-  swapiService = new SwapiService();
 
   toggleRandomPlanet = () => {
     this.setState({
@@ -39,28 +30,32 @@ export default class App extends Component {
     })
   }
 
+  onServiceChange = () => {
+    this.setState(({ swapiService }) => {
+      const Service = swapiService instanceof SwapiService ? DummySwapiService : SwapiService;
+
+      return {
+        swapiService: new Service()
+      }
+    })
+  }
+
   render() {
     if (this.state.hasError) {
       return <ErrorIndicator/>
     }
     const planet = this.state.randomPlanet ? <RandomPlanet /> : null;
-    // const {id} = this.swapiService.getPerson;
 
     return (
       <div className='container'>
-        <SwapiServiceProvider value={this.swapiService}>
-          <Header />
-          { planet }
-          <Button toggleRandomPlanet={this.toggleRandomPlanet}/>
-
-          <PersonDetails itemId={11}/>
-          <PlanetDetails itemId={3}/>
-          <StarshipDetails itemId={22}/>
-
-          <PersonList/>
-          <PlanetList/>
-          <StarshipList/>
-        </SwapiServiceProvider>
+		<SwapiServiceProvider value={this.state.swapiService}>
+			<Header onServiceChange={this.onServiceChange}/>
+			{ planet }
+			<Button toggleRandomPlanet={this.toggleRandomPlanet}/>
+			<PeoplePage/>
+			<PlanetPage/>
+			<StarshipPage/>
+		</SwapiServiceProvider>
       </div>
     );
   }
