@@ -50,12 +50,15 @@ export default class App extends Component {
     return (
       <div className='container'>
 		<SwapiServiceProvider value={this.state.swapiService}>
-			<Header onServiceChange={this.onServiceChange}/>
-			{ planet }
-			<Button toggleRandomPlanet={this.toggleRandomPlanet}/>
-			<PeoplePage/>
-			<PlanetPage/>
-			<StarshipPage/>
+			<Router>
+				<Header onServiceChange={this.onServiceChange}/>
+				{ planet }
+				<Button toggleRandomPlanet={this.toggleRandomPlanet}/>
+				<Route path="/" exact render={() => <h2>Welcome to Star DB</h2>}/>
+				<Route path="/people" component={PeoplePage}/>
+				<Route path="/planets" component={PlanetPage}/>
+				<Route path="/starships" component={StarshipPage}/>
+			</Router>
 		</SwapiServiceProvider>
       </div>
     );
