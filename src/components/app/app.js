@@ -10,6 +10,7 @@ import {PeoplePage, PlanetPage, StarshipPage} from '../pages';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 import './app.css';
+import { StarshipDetails } from '../sw-pages';
 
 export default class App extends Component {
 
@@ -54,10 +55,17 @@ export default class App extends Component {
 				<Header onServiceChange={this.onServiceChange}/>
 				{ planet }
 				<Button toggleRandomPlanet={this.toggleRandomPlanet}/>
+
 				<Route path="/" exact render={() => <h2>Welcome to Star DB</h2>}/>
-				<Route path="/people" component={PeoplePage}/>
+				<Route path="/people/:id?" component={PeoplePage}/>
 				<Route path="/planets" component={PlanetPage}/>
-				<Route path="/starships" component={StarshipPage}/>
+				<Route path="/starships" exact component={StarshipPage}/>
+        <Route path="/starships/:id" 
+          render={({match}) => {
+              const {id} = match.params;
+              return <StarshipDetails itemId={id}/> 
+          }}/>
+
 			</Router>
 		</SwapiServiceProvider>
       </div>
